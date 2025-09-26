@@ -1,0 +1,5 @@
+{
+  "name": "Generatore di Verifiche AI",
+  "description": "Un'applicazione per insegnanti per generare verifiche a scelta multipla da file PDF e testo utilizzando l'IA. Personalizza la difficoltà, il numero di domande e le opzioni di risposta per creare rapidamente valutazioni uniche e complete di soluzioni.",
+  "requestFramePermissions": []
+}

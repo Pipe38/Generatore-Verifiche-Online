@@ -1,0 +1,20 @@
+{
+  "short_name": "Verifiche AI",
+  "name": "Generatore di Verifiche AI",
+  "icons": [
+    {
+      "src": "https://www.gstatic.com/a/ads/images/studio/logo/google-ai-studio-icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "https://www.gstatic.com/a/ads/images/studio/logo/google-ai-studio-icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#4f46e5",
+  "background_color": "#f9fafb"
+}
