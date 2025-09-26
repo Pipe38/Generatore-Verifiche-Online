@@ -1,3 +1,4 @@
+
 const CACHE_NAME = 'generatore-verifiche-ai-v1';
 // Usa percorsi relativi per essere compatibile con GitHub Pages
 const urlsToCache = [
@@ -14,11 +15,9 @@ const urlsToCache = [
   'components/ErrorAlert.tsx',
   'components/Welcome.tsx',
   'components/ApiKeyModal.tsx',
-  'manifest.json',
-  'https://cdn.tailwindcss.com',
-  'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap',
-  'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js',
-  'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js'
+  'manifest.json'
+  // Le risorse CDN sono state rimosse per evitare errori CORS nel service worker.
+  // Il browser le metterà in cache usando la sua cache HTTP standard.
 ];
 
 self.addEventListener('install', event => {
@@ -26,7 +25,21 @@ self.addEventListener('install', event => {
     caches.open(CACHE_NAME)
       .then(cache => {
         console.log('Opened cache');
-        return cache.addAll(urlsToCache);
+        // Usiamo no-cache per le richieste di caching per assicurarci di ottenere le risorse
+        // anche se sono già nella cache del browser, ma con header CORS mancanti.
+        const cachePromises = urlsToCache.map(urlToCache => {
+          return fetch(new Request(urlToCache, {cache: 'reload'}))
+            .then(response => {
+              if (response.ok) {
+                return cache.put(urlToCache, response);
+              }
+              return Promise.reject(`Failed to fetch ${urlToCache}: ${response.statusText}`);
+            }).catch(err => {
+                console.warn(`Could not cache ${urlToCache}. It might be unavailable offline.`, err);
+            });
+        });
+
+        return Promise.all(cachePromises);
       })
   );
 });
@@ -40,26 +53,12 @@ self.addEventListener('fetch', event => {
           return response;
         }
 
+        // Se non è in cache, vai alla rete.
         return fetch(event.request).then(
           response => {
-            // Check if we received a valid response
-            if (!response || response.status !== 200 || response.type !== 'basic' && response.type !== 'cors') {
-              return response;
-            }
-
-            // IMPORTANT: Clone the response. A response is a stream
-            // and because we want the browser to consume the response
-            // as well as the cache consuming the response, we need
-            // to clone it so we have two streams.
-            const responseToCache = response.clone();
-
-            if (event.request.method === 'GET') {
-                caches.open(CACHE_NAME)
-                  .then(cache => {
-                    cache.put(event.request, responseToCache);
-                  });
-            }
-
+            // Non mettiamo in cache le risorse esterne (es. API di Google) qui
+            // per evitare di salvare risposte che potrebbero cambiare o avere header restrittivi.
+            // Il codice originale provava a mettere in cache tutto, il che è rischioso.
             return response;
           }
         );

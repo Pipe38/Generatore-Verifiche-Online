@@ -1,5 +1,6 @@
+
 import React, { useState, useRef, useCallback } from 'react';
-import type { Quiz } from '../types';
+import type { Quiz } from '../types.ts';
 
 // Dichiarazione delle librerie globali per TypeScript
 declare global {

@@ -1,14 +1,14 @@
 
 import React, { useState, useCallback, useEffect } from 'react';
-import { Header } from './components/Header';
-import { InputForm, FormValues } from './components/InputForm';
-import { QuizDisplay } from './components/QuizDisplay';
-import { LoadingSpinner } from './components/LoadingSpinner';
-import { ErrorAlert } from './components/ErrorAlert';
-import { Welcome } from './components/Welcome';
-import { ApiKeyModal } from './components/ApiKeyModal';
-import type { Quiz } from './types';
-import { generateQuizFromContent } from './services/geminiService';
+import { Header } from './components/Header.tsx';
+import { InputForm, FormValues } from './components/InputForm.tsx';
+import { QuizDisplay } from './components/QuizDisplay.tsx';
+import { LoadingSpinner } from './components/LoadingSpinner.tsx';
+import { ErrorAlert } from './components/ErrorAlert.tsx';
+import { Welcome } from './components/Welcome.tsx';
+import { ApiKeyModal } from './components/ApiKeyModal.tsx';
+import type { Quiz } from './types.ts';
+import { generateQuizFromContent } from './services/geminiService.ts';
 
 const App: React.FC = () => {
   const [apiKey, setApiKey] = useState<string | null>(null);
